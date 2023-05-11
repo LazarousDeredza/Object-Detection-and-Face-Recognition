@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fcfcfc"
+    tools:context=".HelpActivity">
+
+    <TextView
+        android:id="@+id/battery_Indication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:text="@string/battery" />
+
+    <TextView
+        android:id="@+id/tvHelp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/battery_Indication"
+        android:fontFamily="@font/opensbold"
+        android:gravity="center"
+        android:text="Help page"
+        android:textSize="25sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:id="@+id/underHelper"
+        android:layout_below="@id/tvHelp"
+        android:background="@color/black" />
+
+    <LinearLayout
+        android:id="@+id/helperDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/underHelper"
+        android:padding="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtHelperName"
+            android:layout_width="wrap_content"
+           android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/helpername" />
+
+        <TextView
+            android:id="@+id/txtHelperphone"
+            android:layout_width="wrap_content"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/helperNumber" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/helperemaillayout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/helperDetails"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtHelperemail"
+            android:layout_width="0dp"
+            android:textAlignment="center"
+            android:textColor="@color/blue"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/helperEmail" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/helperemaillayout"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/smart_dialer_mod"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:clickable="true"
+
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/cerclebackgroundgreen"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_phone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/opensregular"
+                    android:text="Phone Call"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/lightgray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensregular"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Call My Assistant"
+                    android:textColor="@android:color/darker_gray" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/help_mod"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/cerclebackgroundyello"
+                    android:padding="10dp"
+                    android:src="@drawable/emai_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/opensregular"
+                    android:text="Sent Email"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/lightgray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensregular"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Share live location"
+                    android:textColor="@android:color/darker_gray" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btn_sign_up_guardian"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/darkblue"
+            android:clickable="true"
+            android:fontFamily="@font/opensregular"
+            android:padding="40dp"
+            android:text="swipe area"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

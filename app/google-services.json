@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "776470856246",
+    "project_id": "eyesyhopefy",
+    "storage_bucket": "eyesyhopefy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776470856246:android:4b6f2535a6391badc3ce97",
+        "android_client_info": {
+          "package_name": "com.example.eyesyhopefyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776470856246-h7mc7tjhrk5eb8ats9pfmuoe2jetmj84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1_mvOvKTwps8IMmxzb18-c-u89oXMyAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776470856246-h7mc7tjhrk5eb8ats9pfmuoe2jetmj84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
