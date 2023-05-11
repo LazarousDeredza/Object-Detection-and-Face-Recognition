@@ -14,9 +14,11 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.eyesyhopefyp.Common.Voice;
 import com.example.eyesyhopefyp.Dashboard.dashboardActivity;
+import com.example.eyesyhopefyp.MyDbHelper;
 import com.example.eyesyhopefyp.R;
 import com.example.eyesyhopefyp.UserCommon.signUpActivity;
 import com.example.eyesyhopefyp.UserCommon.signUpBlindActivity;
+import com.example.eyesyhopefyp.UserModel;
 import com.example.eyesyhopefyp.introductoryActivity;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -24,6 +26,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -38,7 +41,8 @@ public class splashScreen extends AppCompatActivity {
     Timer timer;
     TextToSpeech textToSpeech;
     private static MediaPlayer mediaPlayer;
-
+    ArrayList<UserModel> users=new ArrayList<>();
+    MyDbHelper myDbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,8 @@ public class splashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         initWidget();
 
+        myDbHelper=new MyDbHelper(this);
+        users=myDbHelper.getAllUSERS();
         checkPermissions();
 
         title.animate().translationY(-1400).setDuration(1000).setStartDelay(4000);
@@ -70,7 +76,7 @@ public class splashScreen extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    textToSpeech.speak("Eyesy Hope is about to Start!", TextToSpeech.QUEUE_FLUSH, null, null);
+                    textToSpeech.speak("Starting Eyesy Hope ", TextToSpeech.QUEUE_FLUSH, null, null);
                 }
 
             }
@@ -83,12 +89,26 @@ public class splashScreen extends AppCompatActivity {
     }
 
     private void newActivity() {
-        Intent in = new Intent(splashScreen.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
-       // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
-        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(in);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        finish();
+        if(users.size() == 0){
+            Intent in = new Intent(splashScreen.this, SignUp.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+            // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+            in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(in);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
+        }else{
+
+            Intent in = new Intent(splashScreen.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+            // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+           in.putExtra("name",users.get(0).getName());
+            in.putExtra("email",users.get(0).getEmail());
+            in.putExtra("phone",users.get(0).getPhone());
+            in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(in);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
+        }
+
 
     }
 

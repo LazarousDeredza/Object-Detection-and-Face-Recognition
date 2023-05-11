@@ -96,12 +96,12 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
 
     //GET ALL USERS
-    public ArrayList<UserModel> getAllUSERS(String OrderBy){
+    public ArrayList<UserModel> getAllUSERS(){
         //order by query will allow to sort data e.g newest to oldest , first, last name ascending or descending
         //it will return list or records since we have used return type arrayList<Usermodel>
 
         ArrayList<UserModel> recordsList=new ArrayList<>();
-        String selectQuery ="SELECT * FROM "+Constants.Users+" ORDER BY "+OrderBy;
+        String selectQuery ="SELECT * FROM "+Constants.Users;
         SQLiteDatabase db =this.getWritableDatabase();
         Cursor cursor=db.rawQuery(selectQuery,null);
         if(cursor.moveToFirst()){

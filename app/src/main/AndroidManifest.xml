@@ -49,6 +49,9 @@
             android:name=".Dashboard.GuardianDashboard"
             android:exported="false" />
         <activity
+            android:name=".Introduction.SignUp"
+            android:exported="false" />
+        <activity
             android:name=".UserCommon.signUpBlindActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
