@@ -54,5 +54,6 @@
     <string name="helperEmail">lazarousderedza99@gmail.com</string>
     <string name="helperNumber">+263774780043</string>
     <string name="helpername">Lazarous Deredza</string>
+    <string name="enter_guardian_full_name">Enter Guardian Full Name</string>
 
 </resources>
