@@ -14,13 +14,13 @@ public class Constants {
     public  static final String C_ID="ID";
     public  static final String C_PHONE="PHONE";
     public  static final String C_EMAIL="EMAIL";
-
-
+    public static final String NAME ="NAME" ;
+    public static final String BlindName ="BlindName" ;
 
     //Table Users
 
     public static  final String Users="users";
-    public static final String NAME ="NAME" ;
+
 
 ;
     //Create table query
@@ -28,7 +28,8 @@ public class Constants {
             +C_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
             +NAME+" TEXT,"
             +C_PHONE+" TEXT,"
-            +C_EMAIL +" TEXT"
+            +C_EMAIL +" TEXT,"
+            +BlindName +" TEXT"
             +" )";
 
 

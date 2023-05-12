@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -50,6 +51,7 @@
             android:exported="false" />
         <activity
             android:name=".Introduction.SignUp"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserCommon.signUpBlindActivity"

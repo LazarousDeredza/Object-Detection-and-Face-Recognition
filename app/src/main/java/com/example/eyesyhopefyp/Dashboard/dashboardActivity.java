@@ -35,10 +35,12 @@ import android.widget.Toast;
 
 import com.example.eyesyhopefyp.Contacts.contactActivity;
 import com.example.eyesyhopefyp.HelpActivity;
+import com.example.eyesyhopefyp.MyDbHelper;
 import com.example.eyesyhopefyp.R;
 import com.example.eyesyhopefyp.Receivers.BatteryReceiver;
 import com.example.eyesyhopefyp.Receivers.NetworkStatus;
 import com.example.eyesyhopefyp.Shopping.smartShoppingActivity;
+import com.example.eyesyhopefyp.UserModel;
 import com.example.eyesyhopefyp.Utility.IntroductionMessageHelper;
 import com.example.eyesyhopefyp.Utility.Voice;
 import com.example.eyesyhopefyp.Utility.Weather;
@@ -67,7 +69,7 @@ import io.paperdb.Paper;
 
 public class dashboardActivity extends AppCompatActivity implements LocationListener {
     private static final int REQ_CODE_DASHBOARD_RESULT = 100;
-    CardView faceRecognition, objectDetect, contactmod, help_mod, smartdialer;
+    CardView faceRecognition, objectDetect, contactmod, help_mod;
     Button assistant;
     private int swipeStep = 0;
     private final static int swipesNumber = 4;
@@ -87,7 +89,9 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
     Translator englishUrduTranslator;
     double longt, latt;
     LocationManager locationManager;
-
+    String Name, Phone, Email;
+    ArrayList<UserModel> users=new ArrayList<>();
+    MyDbHelper myDbHelper;
     //endregion
 
     IntroductionMessageHelper introductionMessageHelper;
@@ -97,6 +101,16 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_dashboard);
+
+        myDbHelper=new MyDbHelper(this);
+        users=myDbHelper.getAllUSERS();
+
+        Name = users.get(0).getName();
+        Email =  users.get(0).getEmail();
+        Phone =  users.get(0).getPhone();
+
+        Log.e("Helper", Name + " " + Phone + "  " + Email);
+
         Paper.init(this);
         Voice.init(dashboardActivity.this);
         initWidget();
@@ -306,7 +320,12 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                 Voice.speak(dashboardActivity.this, "opening help activity ", false);
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
-                        startActivity(new Intent(dashboardActivity.this, HelpActivity.class));
+                        Intent in = new Intent(dashboardActivity.this, HelpActivity.class);
+                        in.putExtra("name", Name);
+                        in.putExtra("email", Email);
+                        in.putExtra("phone", Phone);
+
+                        startActivity(in);
                     }
                 }, 2000);
                 break;
@@ -327,6 +346,15 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
 
         assistant = findViewById(R.id.btn_Assist);
         battery = findViewById(R.id.battery_Indication);
+
+       resetCardColors();
+    }
+
+    private void resetCardColors() {
+        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
     }
 
     @Override
@@ -346,14 +374,14 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
             Thread.sleep(3000);
         } catch (ActivityNotFoundException y) {
             y.printStackTrace();
-            Log.e("Error " ,y.getMessage());
-            Toast.makeText(this,"Your Device is failing to support speech recognition",Toast.LENGTH_SHORT).show();
+            Log.e("Error ", y.getMessage());
+            Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
 
             Voice.speak(dashboardActivity.this, "Your Device is failing to support speech recognition", false);
-        }catch (InterruptedException s){
+        } catch (InterruptedException s) {
             s.printStackTrace();
-            Log.e("Error " ,s.getMessage());
-            Toast.makeText(this,"Your Device is failing to support speech recognition",Toast.LENGTH_SHORT).show();
+            Log.e("Error ", s.getMessage());
+            Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
             Voice.speak(dashboardActivity.this, "Your Device is failing to support speech recognition", false);
         }
     }
@@ -369,22 +397,38 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                     String input = result.get(0).toLowerCase().trim();
                     Log.i("check", input);
                     if (containsWords(input, new String[]{"object detection"})) {
+                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
                         Voice.speak(dashboardActivity.this, "starting object detection ", false);
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
+
                                 startActivity(new Intent(dashboardActivity.this, DetectorActivity.class));
                             }
                         }, 1000);
 
                     } else if (containsWords(input, new String[]{"face recognition"})) {
+
+                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
                         Voice.speak(dashboardActivity.this, "starting face recognition", false);
+
+
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 startActivity(new Intent(dashboardActivity.this, com.example.eyesyhopefyp.FaceRecognition.FaceRecognition.class));
                             }
                         }, 2000);
-                    } else if (input.contains("dialer") || input.contains("contact")||input.contains("dial")||input.contains("dial pad")||input.contains("contacts")) {
+                    } else if (input.contains("dialer") || input.contains("contact") || input.contains("dial") || input.contains("dial pad") || input.contains("contacts")) {
+                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
                         Voice.speak(dashboardActivity.this, "Opening contacts page", false);
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
@@ -392,6 +436,10 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                             }
                         }, 1000);
                     } else if (input.contains("help") || input.contains("helper")) {
+                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
                         Voice.speak(dashboardActivity.this, "Initiating Help activity", false);
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
@@ -399,6 +447,7 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                             }
                         }, 1000);
                     } else if (input.contains("clear all") || input.contains("remove all")) {
+                        resetCardColors();
                         Voice.speak(dashboardActivity.this, "Removing all cache data", false);
                         Paper.book().destroy();
                     } else {
@@ -485,15 +534,33 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                                 switch (swipeStep) {
                                     case 0:
                                         Voice.speak(dashboardActivity.this, getString(R.string.swipe_face_recognition), false);
+                                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
+
+
                                         break;
                                     case 1:
                                         Voice.speak(dashboardActivity.this, getString(R.string.swipe_object_detection), false);
+                                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
                                         break;
                                     case 2:
                                         Voice.speak(dashboardActivity.this, getString(R.string.swipe_smart_dialer), false);
+                                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
+                                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.white));
                                         break;
                                     case 3:
                                         Voice.speak(dashboardActivity.this, getString(R.string.swipe_help), false);
+                                        faceRecognition.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        objectDetect.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        contactmod.setCardBackgroundColor(getResources().getColor(R.color.white));
+                                        help_mod.setCardBackgroundColor(getResources().getColor(R.color.cardBackground));
                                         break;
                                     default:
                                         break;
@@ -503,12 +570,14 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                             if (Math.abs(yDiff) > threshold && Math.abs(velocityY) > velocity_threshold) {
                                 //When X differ is greater than threshold and X velocity is greater than velocity threshold
                                 if (yDiff > 0) {
+                                    resetCardColors();
                                     Voice.playAssetSound(dashboardActivity.this, "AppCommands/dashboard_aboutme.mp3");
                                 } else {
+                                    resetCardColors();
                                     swipeStepDetails = ((swipeStepDetails - 1) % swipesDetailNumber + swipesDetailNumber) % swipesDetailNumber; // to handle Negative value
                                     switch (swipeStepDetails) {
                                         case 0:
-                                            Voice.speak(dashboardActivity.this, "Your City is " + city + ", Province is " + province + ", Your Country is " + country , false);
+                                            Voice.speak(dashboardActivity.this, "Your City is " + city + ", Province is " + province + ", Your Country is " + country, false);
                                             break;
                                         case 1:
                                             temperature_service();

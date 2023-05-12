@@ -62,7 +62,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
 
   //INSERT INTO USERS
-   public long insertToUsers(String Name,String Phone,String Email) {
+   public long insertToUsers(String Name,String Phone,String Email,String bName) {
 
         //get Writable database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -75,9 +75,9 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
 
         values.put(Constants.C_PHONE, Phone);
-       values.put(Constants.NAME, Phone);
+        values.put(Constants.NAME, Name);
         values.put(Constants.C_EMAIL, Email);
-
+       values.put(Constants.BlindName, bName);
 
 
         //insert row , it will return record id of saved record
@@ -110,7 +110,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
                        ""+ cursor.getInt(cursor.getColumnIndex(Constants.C_ID)),
                         ""+cursor.getString(cursor.getColumnIndex(Constants.NAME)),
                         ""+cursor.getString(cursor.getColumnIndex(Constants.C_PHONE)),
-                        ""+cursor.getString(cursor.getColumnIndex(Constants.C_EMAIL))
+                        ""+cursor.getString(cursor.getColumnIndex(Constants.C_EMAIL)),
+                        ""+cursor.getString(cursor.getColumnIndex(Constants.BlindName))
 
                 );
 

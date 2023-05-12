@@ -45,7 +45,7 @@ public class signUpActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
 
-        initWidget();
+       /* initWidget();
 
         //Services
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -53,11 +53,11 @@ public class signUpActivity extends AppCompatActivity {
         mBattery = new BatteryReceiver(battery, getApplicationContext());
         registerReceiver(mBattery, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         //Check Internet Connection
-        networkStatus = new NetworkStatus(signUpActivity.this);
+        networkStatus = new NetworkStatus(signUpActivity.this);*/
 
     }
 
-
+/*
     private void initWidget() {
         battery = findViewById(R.id.battery_Indication);
         nameTextInput = (TextInputLayout) findViewById(R.id.name_Guardian);
@@ -138,6 +138,6 @@ public class signUpActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-    }
+    }*/
 
 }

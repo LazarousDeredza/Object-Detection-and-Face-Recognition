@@ -8,6 +8,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -100,9 +101,8 @@ public class splashScreen extends AppCompatActivity {
 
             Intent in = new Intent(splashScreen.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
             // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
-           in.putExtra("name",users.get(0).getName());
-            in.putExtra("email",users.get(0).getEmail());
-            in.putExtra("phone",users.get(0).getPhone());
+
+
             in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(in);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

@@ -2,22 +2,24 @@ package com.example.eyesyhopefyp;
 
 public class UserModel {
     String id;
-    String  name,phone,email;
+    String  name,phone,email,BlindPersonName;
 
     public UserModel() {
     }
 
-    public UserModel(String name, String phone, String email) {
+    public UserModel(String name, String phone, String email, String blindPersonName) {
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.BlindPersonName = blindPersonName;
     }
 
-    public UserModel(String id, String name, String phone, String email) {
+    public UserModel(String id, String name, String phone, String email, String blindPersonName) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.BlindPersonName = blindPersonName;
     }
 
     public String getId() {
@@ -50,5 +52,13 @@ public class UserModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getBlindPersonName() {
+        return BlindPersonName;
+    }
+
+    public void setBlindPersonName(String blindPersonName) {
+        BlindPersonName = blindPersonName;
     }
 }

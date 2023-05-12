@@ -6,8 +6,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 
+import com.example.eyesyhopefyp.HelpActivity;
 import com.example.eyesyhopefyp.Shopping.IntroductionMessage;
 
 public class IntroductionMessageHelper {
@@ -126,5 +129,34 @@ public class IntroductionMessageHelper {
     }
 
 
+    public boolean introductionMessageForHelpDashboard(HelpActivity helpActivity) {
+        prefEnglish = activity.getSharedPreferences("EnglishHelperIntro", MODE_PRIVATE);
+        firstStartEnglish = prefEnglish.getBoolean("EnglishHelperIntro", true);
 
+        if (firstStartEnglish) {
+            return removeIntroductionMessageForHelper(helpActivity);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    helpActivity.speakAtFirst();
+                }
+            }, 1000);
+        }
+        return true;
+    }
+
+    private boolean removeIntroductionMessageForHelper(HelpActivity helpActivity) {
+        //todo : put the english message
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                helpActivity.speakAtwelcome();
+            }
+        }, 1000);
+
+        prefEnglish = activity.getSharedPreferences("EnglishHelperIntro", MODE_PRIVATE);
+        editorE = prefEnglish.edit();
+        editorE.putBoolean("EnglishHelperIntro", false);
+        editorE.apply();
+        return false;
+    }
 }

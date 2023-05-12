@@ -24,80 +24,109 @@
         android:gravity="center"
         android:text="Guardian Sign Up"
         android:textSize="32sp" />
-
-    <LinearLayout
-        android:id="@+id/ll"
+    <ScrollView
+        android:layout_below="@id/tv_guardian"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_guardian"
-        android:layout_marginTop="103dp"
-        android:orientation="vertical"
-        android:padding="25dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/name_Guardian"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_guardian_full_name"
-            app:startIconDrawable="@drawable/ic_baseline_person_24">
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
+            android:padding="25dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_Guardian"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/nameInput"
-                android:inputType="text" />
+                android:hint="@string/enter_guardian_full_name"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phoneNo_Guardian"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="@string/phone_number"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidthFocused="2dp"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/black"
-            app:startIconDrawable="@drawable/ic_phone"
-            app:startIconTint="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phoneNo_Guardian"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="phone"
-                android:id="@+id/phoneNo"
-                android:textColor="@color/black" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/phone_number"
+                app:boxStrokeColor="@color/black"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
 
-        </com.google.android.material.textfield.TextInputLayout>
+                app:startIconDrawable="@drawable/ic_phone"
+                app:startIconTint="@color/black">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_Guardian"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Enter Email"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidthFocused="2dp"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/black"
-            app:startIconDrawable="@drawable/emai_icon"
-            app:startIconTint="@color/black">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phoneNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="phone"
+                    android:textColor="@color/black" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputEmail"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_Guardian"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textEmailAddress"
-                android:textColor="@color/black" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Enter Email"
+                app:boxStrokeColor="@color/black"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:startIconDrawable="@drawable/emai_icon"
+                app:startIconTint="@color/black">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/black" />
 
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_Blind"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:hint="@string/enter_blind_persons_name"
+                app:boxStrokeColor="@color/black"
+                app:boxStrokeWidthFocused="2dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputBlindName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
 
     <Button
         android:id="@+id/btn_sign_up_guardian"
@@ -107,9 +136,8 @@
         android:background="@color/swipeAreaBackground"
         android:clickable="true"
         android:fontFamily="@font/opensregular"
-        android:onClick="callOTPScreen"
         android:padding="40dp"
-        android:text="Save "
+        android:text="Save"
         android:textColor="@color/white"
         android:textSize="36sp" />
 

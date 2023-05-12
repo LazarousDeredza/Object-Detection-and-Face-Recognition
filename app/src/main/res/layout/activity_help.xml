@@ -88,7 +88,7 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/smart_dialer_mod"
+            android:id="@+id/call"
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:layout_margin="10dp"
@@ -137,7 +137,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/help_mod"
+            android:id="@+id/email"
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:layout_margin="10dp"
@@ -192,9 +192,9 @@
         android:gravity="bottom">
 
         <Button
-            android:id="@+id/btn_sign_up_guardian"
+            android:id="@+id/btn_Assist"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:background="@color/darkblue"
             android:clickable="true"

@@ -75,6 +75,7 @@
             android:clickable="true"
             android:layout_width="0dp"
             android:layout_weight="1"
+            app:cardCornerRadius="10dp"
             android:layout_height="160dp"
             android:layout_margin="10dp">
             <LinearLayout
@@ -125,6 +126,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:layout_width="0dp"
+            app:cardCornerRadius="10dp"
             android:layout_weight="1"
             android:layout_height="160dp"
             android:layout_margin="10dp">
@@ -168,6 +170,8 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:layout_width="0dp"
+            app:cardCornerRadius="10dp"
+
             android:layout_weight="1"
             android:layout_height="160dp"
             android:layout_margin="10dp">

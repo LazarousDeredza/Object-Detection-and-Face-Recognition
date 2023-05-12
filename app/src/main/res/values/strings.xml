@@ -29,7 +29,9 @@
 
     <!-- Dashboard Speaking Strings -->
     <string name="swipe_face_recognition">Face Recognition</string>
+    <string name="swipe_call_assistant">Call Assitant</string>
     <string name="swipe_object_detection">Object Detection</string>
+    <string name="swipe_send_email">Send Email</string>
     <string name="swipe_smart_shopping">Smart Shopping</string>
     <string name="swipe_smart_dialer">Call from contacts</string>
     <string name="swipe_help">Help activity</string>
@@ -55,5 +57,12 @@
     <string name="helperNumber">+263774780043</string>
     <string name="helpername">Lazarous Deredza</string>
     <string name="enter_guardian_full_name">Enter Guardian Full Name</string>
+    <string name="welcomeToHelpIntro" > Welcome to help activity , There are two modes you can use to contact your assistant
+        that is by email or by phone call , swipe at the bottom of your screen there is a big button there that you can use to switch between the modes,
+        double tap to open the desired mode and long press to go back to home page</string>
+    <string name="welcomeToHelp" >
+        Welcome to help activity
+    </string>
+    <string name="enter_blind_persons_name">Enter Blind Persons\' Name</string>
 
 </resources>
