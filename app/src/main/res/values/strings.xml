@@ -29,7 +29,7 @@
 
     <!-- Dashboard Speaking Strings -->
     <string name="swipe_face_recognition">Face Recognition</string>
-    <string name="swipe_call_assistant">Call Assitant</string>
+    <string name="swipe_call_assistant">Call Assistant</string>
     <string name="swipe_object_detection">Object Detection</string>
     <string name="swipe_send_email">Send Email</string>
     <string name="swipe_smart_shopping">Smart Shopping</string>
@@ -64,5 +64,6 @@
         Welcome to help activity
     </string>
     <string name="enter_blind_persons_name">Enter Blind Persons\' Name</string>
+    <string name="search_contact">Search Contact...</string>
 
 </resources>

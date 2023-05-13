@@ -1,17 +1,11 @@
 package com.example.eyesyhopefyp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -19,25 +13,26 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import com.example.eyesyhopefyp.Dashboard.dashboardActivity;
 import com.example.eyesyhopefyp.Receivers.BatteryReceiver;
 import com.example.eyesyhopefyp.Receivers.NetworkStatus;
 import com.example.eyesyhopefyp.Utility.IntroductionMessageHelper;
 import com.example.eyesyhopefyp.Utility.Voice;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,9 +54,11 @@ public class HelpActivity extends AppCompatActivity {
     String Phone;
     String blindPersonName;
     TextView txtHelperName, txtHelperphone, txtHelperemail;
-
+    double latitude;
+    double longitude;
 
     private static final int REQ_CODE_DASHBOARD_RESULT = 100;
+    private static final int requestCode = 100;
     CardView call, email;
     Button assistant;
     private int swipeStep = 0;
@@ -83,9 +80,9 @@ public class HelpActivity extends AppCompatActivity {
     Translator englishUrduTranslator;
     double longt, latt;
     LocationManager locationManager;
-    ArrayList<UserModel> users=new ArrayList<>();
+    ArrayList<UserModel> users = new ArrayList<>();
     MyDbHelper myDbHelper;
-
+    private FusedLocationProviderClient fusedLocationClient;
     //endregion
 
     IntroductionMessageHelper introductionMessageHelper;
@@ -101,9 +98,8 @@ public class HelpActivity extends AppCompatActivity {
         txtHelperphone = findViewById(R.id.txtHelperphone);
         txtHelperemail = findViewById(R.id.txtHelperemail);
 
-        myDbHelper=new MyDbHelper(this);
-        users=myDbHelper.getAllUSERS();
-
+        myDbHelper = new MyDbHelper(this);
+        users = myDbHelper.getAllUSERS();
 
 
         Name = users.get(0).getName();
@@ -113,10 +109,10 @@ public class HelpActivity extends AppCompatActivity {
         Phone = newFirstChar + Phone1.substring(1);
 
         Email = users.get(0).getEmail();
-        blindPersonName= users.get(0).getBlindPersonName();
+        blindPersonName = users.get(0).getBlindPersonName();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        Log.e("Helper ", "Name = " +Name + "\nEmail = " + Email + " \nPhone = " + Phone +" \nBlind person name = " + blindPersonName);
+        Log.e("Helper ", "Name = " + Name + "\nEmail = " + Email + " \nPhone = " + Phone + " \nBlind person name = " + blindPersonName);
 
         txtHelperName.setText(Name);
         txtHelperphone.setText(Phone);
@@ -254,11 +250,14 @@ public class HelpActivity extends AppCompatActivity {
 
 
     public void speakAtFirst() {
-        Voice.speak(HelpActivity.this, String.valueOf(R.string.welcomeToHelpIntro), false);
+
+        // Voice.speak(HelpActivity.this, String.valueOf(R.string.welcomeToHelpIntro), false);
+        Voice.speak(HelpActivity.this, getResources().getString(R.string.welcomeToHelpIntro), false);
     }
 
     public void speakAtwelcome() {
-        Voice.speak(HelpActivity.this, String.valueOf(R.string.welcomeToHelp), false);
+        // Voice.speak(HelpActivity.this, String.valueOf(R.string.welcomeToHelp), false);
+        Voice.speak(HelpActivity.this, getResources().getString(R.string.welcomeToHelp), false);
     }
 
     private class SwiperListener implements View.OnTouchListener {
@@ -374,9 +373,6 @@ public class HelpActivity extends AppCompatActivity {
                 resetCardViewColors();
                 Intent in = new Intent(HelpActivity.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
                 // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
-                in.putExtra("name", Name);
-                in.putExtra("email", Email);
-                in.putExtra("phone", Phone);
                 in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(in);
                 finish();
@@ -394,7 +390,7 @@ public class HelpActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         resetCardViewColors();
-                        Voice.speak(HelpActivity.this, "Making Your call to " + Name + " Please wait", false);
+                        Voice.speak(HelpActivity.this, "Calling" + Name + " Please wait", false);
 
                         Intent intent = new Intent(Intent.ACTION_CALL);
                         intent.setData(Uri.parse("tel:" + Phone));
@@ -454,7 +450,7 @@ public class HelpActivity extends AppCompatActivity {
                 // There is no active internet connection
                 connectToNetwork();
             }
-        }else{
+        } else {
 
 
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -476,19 +472,67 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void Sendmail() {
+        Voice.speak(HelpActivity.this, "Sending email , please wait", false);
+        // First, check if location permissions are granted
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            Log.e("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+                        } else {
+                            latitude = -20.0866183;
+                            longitude = 30.8160517;
+
+                        }
+                    }
+                });
+
         Log.e("Network : ", "ON");
+
         // To send the email, create a new instance of the com.example.eyesyhopefyp.SendEmailTask class and execute it
         SendEmailTask sendEmailTask = new SendEmailTask(
                 Email,
-                "Test Subject",
-                "Test Message",
+                "Emergency Pick Up",
+                "Hie " + Name + "\n Its " + blindPersonName + ", can you please  come and collect me i am lost \n\nMy current location is" + "\nhttps://maps.google.com/maps?daddr=" + latitude + "," + longitude,
                 "eyesyhope7@gmail.com",
                 "byljuxduyfrpzzph"
-                ,getApplication(),
+                , getApplication(),
                 HelpActivity.this);
         sendEmailTask.execute();
 
     }
+
+  /*  private void trygettingLocationWithGps() {
+        // First, check if location permissions are granted
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Get the location manager
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            // Define a LocationListener to listen for location updates
+            LocationListener locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    // This method is called when the location changes
+                     latitude = location.getLatitude();
+                     longitude = location.getLongitude();
+                    Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+                }
+
+                // Implement other LocationListener methods here
+            };
+
+            // Request location updates from the location manager
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else {
+            // Request location permissions if not granted
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCode);
+        }
+    }*/
 
 
 }

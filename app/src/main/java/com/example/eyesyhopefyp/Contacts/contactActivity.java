@@ -3,6 +3,7 @@ package com.example.eyesyhopefyp.Contacts;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,7 +11,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -25,7 +29,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +42,10 @@ import com.agrawalsuneet.dotsloader.loaders.ZeeLoader;
 import com.example.eyesyhopefyp.Common.model.Contact;
 import com.example.eyesyhopefyp.Common.volumeHandler;
 import com.example.eyesyhopefyp.Dashboard.dashboardActivity;
+import com.example.eyesyhopefyp.HelpActivity;
 import com.example.eyesyhopefyp.R;
 import com.example.eyesyhopefyp.Receivers.BatteryReceiver;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,20 +53,22 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class contactActivity extends AppCompatActivity implements GestureOverlayView.OnGesturePerformedListener {
+public class contactActivity extends AppCompatActivity {
 
     private TextView battery;
-    private EditText searchBox;
+    private TextInputEditText searchBox;
     private TextToSpeech textToSpeech;
     private Button btnAssist;
     private Intent intent;
     private RecyclerView recyclerView;
     ZeeLoader parentLayout;
-
+    ArrayList<String> bindList;
+    ArrayList<Prediction> result;
     public List<Contact> contactPopulate = new ArrayList<>();
     public contactAdapter adapter;
     myDBHelper db;
-
+    GestureLibrary gesturerLib;
+    GestureOverlayView objGestureOverlay;
     public static String APP_LANG = "";
     SharedPreferences pref;
     BatteryReceiver mBattery;
@@ -83,6 +90,16 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
         //
         adapter = new contactAdapter(contactActivity.this, contactPopulate);
         searchBox = findViewById(R.id.searchBox);
+        searchBox.clearFocus();
+
+        /*gesturerLib = GestureLibraries.fromRawResource(getApplicationContext(), R.raw.gestures);
+        if (!gesturerLib.load()) {
+         Log.e("Gesture loading ","failed");
+            finish();
+
+        }
+        objGestureOverlay = (GestureOverlayView) findViewById(R.id.widgetGesture);*/
+
 
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,7 +117,7 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
                 filter(s.toString());
             }
         });
-        Log.i("check","Contact is loading");
+        Log.i("check", "Contact is loading");
 
         //Services
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -114,7 +131,7 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
         mainActivity = new dashboardActivity();
         clickOnAssistButton();
         if (contactPopulate.isEmpty()) {
-            Log.i("check","Contact is empty");
+            Log.i("check", "Contact is empty");
             new loadTask().execute();
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(contactActivity.this));
@@ -123,10 +140,16 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
         }
     }
 
-    @Override
+  /*  @Override
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
 
-    }
+
+        ArrayList<Prediction> predictions=gesturerLib.recognize(gesture);
+        if (predictions.size()>0 &&predictions.get(0).score>1){
+            Log.e("Gesture",predictions.get(0).name);
+            Toast.makeText(mainActivity, predictions.get(0).name, Toast.LENGTH_SHORT).show();
+        }
+    }*/
 
     public class loadTask extends AsyncTask<Void, Void, Void> {
 
@@ -256,17 +279,28 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
         btnAssist.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                GestureOverlayView objGestureOverlay = (GestureOverlayView) findViewById(R.id.widgetGesture);
-                if (recyclerView.getVisibility() == View.VISIBLE) {
+
+
+                Intent in = new Intent(contactActivity.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+                // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+                in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(in);
+                finish();
+
+
+               /* if (recyclerView.getVisibility() == View.VISIBLE) {
                     objGestureOverlay.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                     textToSpeech.speak("Gesture Mode On", TextToSpeech.QUEUE_FLUSH, null, null);
                     objGestureOverlay.addOnGesturePerformedListener(contactActivity.this);
+
+
+
                 } else {
                     objGestureOverlay.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
                     textToSpeech.speak("Gesture Mode Off", TextToSpeech.QUEUE_FLUSH, null, null);
-                }
+                }*/
                 return true;
             }
         });
@@ -297,6 +331,8 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }catch (ActivityNotFoundException r){
+            textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
@@ -310,6 +346,8 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }catch (ActivityNotFoundException r){
+            textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
@@ -391,6 +429,7 @@ public class contactActivity extends AppCompatActivity implements GestureOverlay
         btnAssist = findViewById(R.id.assistBtn);
         battery = findViewById(R.id.tv_battery_indicator);
 
+        battery.requestFocus();
 
         //Initializing Text to Speech
         textToSpeech = new TextToSpeech(contactActivity.this, new TextToSpeech.OnInitListener() {

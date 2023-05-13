@@ -307,7 +307,7 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                 }, 2000);
                 break;
             case 2:
-                Voice.speak(dashboardActivity.this, "opening Smart Dialer", false);
+                Voice.speak(dashboardActivity.this, "Opening contacts page", false);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
