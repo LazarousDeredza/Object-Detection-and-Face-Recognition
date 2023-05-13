@@ -57,10 +57,10 @@
     <string name="helperNumber">+263774780043</string>
     <string name="helpername">Lazarous Deredza</string>
     <string name="enter_guardian_full_name">Enter Guardian Full Name</string>
-    <string name="welcomeToHelpIntro" > Welcome to help activity , There are two modes you can use to contact your assistant
+    <string name="welcomeToHelpIntro"> Welcome to help activity , There are two modes you can use to contact your assistant
         that is by email or by phone call , swipe at the bottom of your screen there is a big button there that you can use to switch between the modes,
         double tap to open the desired mode and long press to go back to home page</string>
-    <string name="welcomeToHelp" >
+    <string name="welcomeToHelp">
         Welcome to help activity
     </string>
     <string name="enter_blind_persons_name">Enter Blind Persons\' Name</string>

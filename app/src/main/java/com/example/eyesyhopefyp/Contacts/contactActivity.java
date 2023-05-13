@@ -15,11 +15,13 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
@@ -27,6 +29,8 @@ import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,6 +38,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +50,7 @@ import com.example.eyesyhopefyp.Dashboard.dashboardActivity;
 import com.example.eyesyhopefyp.HelpActivity;
 import com.example.eyesyhopefyp.R;
 import com.example.eyesyhopefyp.Receivers.BatteryReceiver;
+import com.example.eyesyhopefyp.Utility.Voice;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -76,6 +82,15 @@ public class contactActivity extends AppCompatActivity {
     Timer timer;
     dashboardActivity mainActivity;
 
+    private int swipeStep = 0;
+    int swipesNumber;
+    private int swipeStepDetails = 0;
+    private final static int swipesDetailNumber = 4;
+    private SwiperListener swiperListener;
+    public int click = 0;
+
+    String nameToCall, numberToCall;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,15 +106,24 @@ public class contactActivity extends AppCompatActivity {
         adapter = new contactAdapter(contactActivity.this, contactPopulate);
         searchBox = findViewById(R.id.searchBox);
         searchBox.clearFocus();
+        swiperListener = new SwiperListener(btnAssist);
 
-        /*gesturerLib = GestureLibraries.fromRawResource(getApplicationContext(), R.raw.gestures);
-        if (!gesturerLib.load()) {
-         Log.e("Gesture loading ","failed");
-            finish();
-
+        if (contactPopulate.isEmpty()) {
+            Log.i("check", "Contact is empty");
+            new loadTask().execute();
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(contactActivity.this));
+            adapter = new contactAdapter(contactActivity.this, contactPopulate);
+            recyclerView.setAdapter(adapter);
         }
-        objGestureOverlay = (GestureOverlayView) findViewById(R.id.widgetGesture);*/
 
+
+        nameToCall = "";
+        numberToCall = "";
+
+
+        swipesNumber = contactPopulate.size();
+        Log.e("swipesNumber ", String.valueOf(swipesNumber));
 
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -129,27 +153,10 @@ public class contactActivity extends AppCompatActivity {
         //Handlers
         volumeHandler volumeHandler = new volumeHandler(getApplicationContext(), textToSpeech);
         mainActivity = new dashboardActivity();
-        clickOnAssistButton();
-        if (contactPopulate.isEmpty()) {
-            Log.i("check", "Contact is empty");
-            new loadTask().execute();
-        } else {
-            recyclerView.setLayoutManager(new LinearLayoutManager(contactActivity.this));
-            adapter = new contactAdapter(contactActivity.this, contactPopulate);
-            recyclerView.setAdapter(adapter);
-        }
+
+
     }
 
-  /*  @Override
-    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-
-
-        ArrayList<Prediction> predictions=gesturerLib.recognize(gesture);
-        if (predictions.size()>0 &&predictions.get(0).score>1){
-            Log.e("Gesture",predictions.get(0).name);
-            Toast.makeText(mainActivity, predictions.get(0).name, Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
     public class loadTask extends AsyncTask<Void, Void, Void> {
 
@@ -288,19 +295,6 @@ public class contactActivity extends AppCompatActivity {
                 finish();
 
 
-               /* if (recyclerView.getVisibility() == View.VISIBLE) {
-                    objGestureOverlay.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    textToSpeech.speak("Gesture Mode On", TextToSpeech.QUEUE_FLUSH, null, null);
-                    objGestureOverlay.addOnGesturePerformedListener(contactActivity.this);
-
-
-
-                } else {
-                    objGestureOverlay.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    textToSpeech.speak("Gesture Mode Off", TextToSpeech.QUEUE_FLUSH, null, null);
-                }*/
                 return true;
             }
         });
@@ -331,7 +325,8 @@ public class contactActivity extends AppCompatActivity {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }catch (ActivityNotFoundException r){
+        } catch (ActivityNotFoundException r) {
+            Log.e("Error", "Device does not support speech recognition");
             textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
@@ -346,7 +341,7 @@ public class contactActivity extends AppCompatActivity {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }catch (ActivityNotFoundException r){
+        } catch (ActivityNotFoundException r) {
             textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
@@ -488,5 +483,223 @@ public class contactActivity extends AppCompatActivity {
 
         adapter.filterList(filtered);
 
+    }
+
+
+    private class SwiperListener implements View.OnTouchListener {
+
+        GestureDetector gestureDetector;
+
+        //Making Constructor
+        public SwiperListener(View view) {
+            //Required Variables init
+            int threshold = 100;
+            int velocity_threshold = 100;
+
+            //Init Simple Gesture Listener
+
+            GestureDetector.SimpleOnGestureListener listener = new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    doubleTapToOpenModule();
+                    return false;
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    float xDiff = e2.getX() - e1.getX();
+                    float yDiff = e2.getY() - e1.getY();
+
+                    try {
+                        //Checking conditions
+                        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                            //Checking Conditions
+                            if (Math.abs(xDiff) > threshold && Math.abs(velocityX) > velocity_threshold) {
+                                //When X differ is greater than threshold and X velocity is greater than velocity threshold
+                                if (xDiff < 0) {
+                                    swipeStep = ((swipeStep - 1) % swipesNumber + swipesNumber) % swipesNumber; // to handle Negative value
+                                } else {
+                                    swipeStep = (swipeStep + 1) % swipesNumber;
+                                }
+
+                                if (!(swipeStep >= contactPopulate.size())) {
+                                    Voice.speak(contactActivity.this, contactPopulate.get(swipeStep).getName(), false);
+                                    Log.e("Name ", contactPopulate.get(swipeStep).getName());
+                                    Log.e("Phone ", contactPopulate.get(swipeStep).getPhoneNumber());
+
+                                    nameToCall = contactPopulate.get(swipeStep).getName();
+                                    numberToCall = contactPopulate.get(swipeStep).getPhoneNumber();
+
+                                    for (int i = 0; i < contactPopulate.size() - 1; i++) {
+                                        int color = Color.WHITE; // the color to set as the background color
+
+                                        RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(i);
+                                        if (holder != null) {
+                                            holder.itemView.setBackgroundColor(color);
+                                        }
+                                    }
+
+
+                                    // the position of the element to change the background color of
+                                    int color = Color.rgb(191, 191, 186); // the color to set as the background color
+
+                                    RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(swipeStep);
+                                    if (holder != null) {
+                                        holder.itemView.setBackgroundColor(color);
+                                        recyclerView.scrollToPosition(swipeStep); // update based on adapter
+                                    }
+
+
+                                } else {
+
+                                    Log.e("Error", "Index Out of Bounce ");
+                                }
+
+
+                            }
+
+
+
+                               /* Log.e("Error","opening speech rec");
+
+                                timer = new Timer();
+                                timer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if (!isConnected(contactActivity.this)) {
+                                            Log.e("Error","opening speech recognition because there is not internet");
+                                            textToSpeech.speak(getString(R.string.network_connectivity_off), TextToSpeech.QUEUE_ADD, null, null);
+                                        } else {
+                                            switch (pref.getString("lang", "en")) {
+                                                case "ur":
+                                                    APP_LANG = "ur-pk";
+                                                    openAssistant(APP_LANG);
+                                                    break;
+                                                default:
+                                                    APP_LANG = "en-us";
+                                                    openAssistant(APP_LANG);
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }, 1000);*/
+
+                        } else {
+                            if (Math.abs(yDiff) > threshold && Math.abs(velocityY) > velocity_threshold) {
+                                //When X differ is greater than threshold and X velocity is greater than velocity threshold
+                                if (yDiff > 0) {
+                                    String todo = "Nothing";
+                                } else {
+                                    Log.e("Error", "opening speech rec");
+
+                                    timer = new Timer();
+                                    timer.schedule(new TimerTask() {
+                                        @Override
+                                        public void run() {
+                                            if (!isConnected(contactActivity.this)) {
+                                                Log.e("Error", "opening speech recognition because there is not internet");
+                                                textToSpeech.speak(getString(R.string.network_connectivity_off), TextToSpeech.QUEUE_ADD, null, null);
+                                            } else {
+                                                switch (pref.getString("lang", "en")) {
+                                                    case "ur":
+                                                        APP_LANG = "ur-pk";
+                                                        openAssistant(APP_LANG);
+                                                        break;
+                                                    default:
+                                                        APP_LANG = "en-us";
+                                                        openAssistant(APP_LANG);
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }, 1000);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                }
+            };
+            gestureDetector = new GestureDetector(listener);
+            view.setOnTouchListener(this);
+
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            //return Gesture event
+            return gestureDetector.onTouchEvent(motionEvent);
+        }
+
+
+    }
+
+    private void doubleTapToOpenModule() {
+        btnAssist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                click++;
+                Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        click = 0;
+                    }
+                };
+                if (click == 1) {
+
+
+                    handler.postDelayed(runnable, 400);
+                } else if (click == 2) {
+                    callActivityOnDoubleTap();
+                } else if (click == 3) {
+
+                    click = 0;
+                }
+
+            }
+        });
+
+        btnAssist.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+
+                Intent in = new Intent(contactActivity.this, dashboardActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+                // Intent in = new Intent(splashScreen.this, introductoryActivity.class); //Manipulating it and sending after splash to dashboardintroductoryActivity
+                in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(in);
+                finish();
+
+
+                return true;
+            }
+        });
+    }
+
+    private void callActivityOnDoubleTap() {
+
+        if (nameToCall.isEmpty() || numberToCall.isEmpty()) {
+            Log.e("Number not found", "no number found , please select a contact first");
+            Voice.speak(contactActivity.this, "please select a contact first before calling", false);
+        } else {
+            Log.e("Calling >>>>   >>>>", nameToCall);
+            Voice.speak(contactActivity.this, "Calling" + nameToCall + " Please wait", false);
+
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + numberToCall));
+
+            if (ActivityCompat.checkSelfPermission(contactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // Request permission to make phone calls
+                ActivityCompat.requestPermissions(contactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+            } else {
+                // Permission already granted, make the phone call
+                startActivity(intent);
+            }
+        }
     }
 }

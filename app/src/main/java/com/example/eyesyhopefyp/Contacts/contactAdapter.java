@@ -6,6 +6,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -29,7 +30,7 @@ public class contactAdapter extends RecyclerView.Adapter<contactAdapter.ViewHold
     public List<Contact> arrayList;
     private TextToSpeech textToSpeech;
     SharedPreferences pref;
-
+   private int selectedPos = RecyclerView.NO_POSITION;
     public contactAdapter(Activity activity, List<Contact> arrayList) {
         this.activity = activity;
         this.arrayList = arrayList;
@@ -96,19 +97,29 @@ public class contactAdapter extends RecyclerView.Adapter<contactAdapter.ViewHold
         //Save the data in the Id of itemView so that it can be acquired when clicking
         holder.itemView.setId(position);
 
+
+
+
+        
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 textToSpeech.speak("Name: "+model.getName()+"and Number is: "+model.getPhoneNumber(), TextToSpeech.QUEUE_ADD, null, null);
+
+                holder.mView.setBackgroundColor(Color.rgb(191, 191, 186));
             }
         });
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                holder.mView.setBackgroundColor(Color.rgb(232, 232, 227));
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:"+model.getPhoneNumber().trim()));
                 activity.startActivity(intent);
+
                 return true;
+
             }
         });
     }
@@ -122,6 +133,8 @@ public class contactAdapter extends RecyclerView.Adapter<contactAdapter.ViewHold
         this.arrayList = filteredList;
         notifyDataSetChanged();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         //Initialize variables

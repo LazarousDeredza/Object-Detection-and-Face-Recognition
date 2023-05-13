@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eyesyhopefyp.Compass;
 import com.example.eyesyhopefyp.Contacts.contactActivity;
 import com.example.eyesyhopefyp.HelpActivity;
 import com.example.eyesyhopefyp.MyDbHelper;
@@ -129,6 +130,17 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
 
         swiperListener = new SwiperListener(assistant);
         location_service();
+
+        battery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(dashboardActivity.this, Compass.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void languageSetup() {

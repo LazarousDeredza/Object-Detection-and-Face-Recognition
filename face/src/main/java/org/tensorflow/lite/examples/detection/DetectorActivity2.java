@@ -17,8 +17,10 @@
 package org.tensorflow.lite.examples.detection;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,7 +32,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +42,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.text.InputType;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -157,6 +162,11 @@ public class DetectorActivity2 extends CameraActivity implements OnImageAvailabl
 
         super.onCreate(savedInstanceState);
 
+
+
+
+
+
         Paper.init(this);
 
         introductionMessageHelper = new IntroductionMessageHelper(this, this);
@@ -236,11 +246,33 @@ public class DetectorActivity2 extends CameraActivity implements OnImageAvailabl
 
         swiperListener = new SwiperListener(frameLayout);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     private void callActivityOnDoubleTap() {
 
-        camera2Fragment.switchFlash();
+      try {
+          camera2Fragment.switchFlash();
+      }catch (Exception e){
+          e.printStackTrace();
+          Log.e("Flashlight","Not supported");
+          return;
+      }
+
+
+
     }
 
     private void onAddClick() {

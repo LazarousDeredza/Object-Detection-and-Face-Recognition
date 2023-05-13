@@ -43,11 +43,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/blue"
-            android:padding="65dp"
+
+            android:background="@color/swipeAreaBackground"
+
             android:fontFamily="@font/opensbold"
+            android:padding="65dp"
+            android:text="SWIPE AREA"
             android:textColor="@color/white"
-            android:text="@string/search_object"
             android:textSize="30sp" />
     </RelativeLayout>
 
