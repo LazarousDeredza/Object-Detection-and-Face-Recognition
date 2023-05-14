@@ -77,6 +77,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchBoxLayout"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/black"
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
         android:layout_below="@+id/header"
 
         >
@@ -114,8 +117,8 @@
         android:contentDescription="@string/assistant"
         android:fontFamily="@font/opensregular"
         android:padding="30dp"
-        android:textColor="@color/white"
         android:text="Swipe Area"
+        android:textColor="@color/white"
         android:textSize="26sp" />
 
 </RelativeLayout>

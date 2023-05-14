@@ -328,6 +328,21 @@ public class contactActivity extends AppCompatActivity {
         } catch (ActivityNotFoundException r) {
             Log.e("Error", "Device does not support speech recognition");
             textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
+          /*  Log.e("Error", r.getMessage());
+            r.printStackTrace();
+            textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
+       */
+
+
+            String appPackageName = "com.google.android.googlequicksearchbox";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+
         }
     }
 
@@ -335,7 +350,7 @@ public class contactActivity extends AppCompatActivity {
         intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language_code);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.assistant_greet));
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak contact name or number");
         try {
             startActivityForResult(intent, reqCode);
             Thread.sleep(3000);
@@ -343,6 +358,17 @@ public class contactActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (ActivityNotFoundException r) {
             textToSpeech.speak("Your device does not support speech recognition, use gestures instead", TextToSpeech.QUEUE_FLUSH, null, null);
+
+
+            String appPackageName = "com.google.android.googlequicksearchbox";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+
         }
     }
 
@@ -358,7 +384,12 @@ public class contactActivity extends AppCompatActivity {
                     String cmd = result.get(0);
                     cmd = cmd.toLowerCase().trim();
 
-                    if (containsWords(cmd, new String[]{"search"})) {
+
+                    if (containsWords(cmd, new String[]{"search"}) || containsWords(cmd, new String[]{"search contact"}) ||
+                            containsWords(cmd, new String[]{"find"}) || containsWords(cmd, new String[]{"search a contact"}) ||
+                            containsWords(cmd, new String[]{"search a number"}) || containsWords(cmd, new String[]{"find a contact"}) ||
+                            containsWords(cmd, new String[]{"find a number"})
+                    ) {
                         textToSpeech.speak("Speak out Contact Name or Number to search!", TextToSpeech.QUEUE_ADD, null, null);
                         try {
                             Thread.sleep(3000);
@@ -366,7 +397,10 @@ public class contactActivity extends AppCompatActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                    } else if (containsWords(cmd, new String[]{"call"})) {
+                    } else if (containsWords(cmd, new String[]{"call"}) || containsWords(cmd, new String[]{"cool"}) ||
+                            containsWords(cmd, new String[]{"phone call"}) || containsWords(cmd, new String[]{"make a phone call"})
+                            || containsWords(cmd, new String[]{"i want to make a phone call"})
+                    ) {
                         textToSpeech.speak("Speak out Contact Name or Number to call!", TextToSpeech.QUEUE_ADD, null, null);
                         try {
                             Thread.sleep(3000);
@@ -389,10 +423,114 @@ public class contactActivity extends AppCompatActivity {
                 break;
             case 20:
                 if (resultCode == RESULT_OK && null != data) {
-                    textToSpeech.speak("Speak out Contact Name or Number to call!", TextToSpeech.QUEUE_FLUSH, null, null);
+                    //  textToSpeech.speak("Speak out Contact Name or Number to call!", TextToSpeech.QUEUE_FLUSH, null, null);
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    Log.e("og ressss", result.toString());
                     String cmd = result.get(0);
                     cmd = cmd.toLowerCase().trim();
+
+                    Log.e("ressss", cmd);
+
+
+                    ArrayList<String> newList = new ArrayList<>();
+
+                    for (String res : result) {
+
+                        String newvalue = res.replaceAll(" ", "");
+
+                        newList.add(newvalue.replaceAll("-", ""));
+                    }
+                    Log.e("new ressss", newList.toString() + "\nLength : " + newList.size());
+
+
+                    boolean found = false;
+
+
+                    Contact contact = new Contact();
+
+                    for (int i = 0; i < newList.size(); i++) {
+                        Log.e("element " + i, newList.get(i));
+                    }
+
+                    for (String searchprase : newList) {
+                        Log.e("searching element ", searchprase);
+                        String newNumber = searchprase;
+
+
+                        if (Character.toString(searchprase.charAt(0)).equals("0")) {
+                            Log.e("replacing a 0 ", "with +263");
+                            newNumber = "+263" + newNumber.substring(1);
+                            Log.e("new num ", newNumber);
+                        }
+
+                        for (Contact cont : contactPopulate) {
+
+
+                            if (cont.getName().replace(" ", "").contains(searchprase) ||
+                                    cont.getPhoneNumber().replace(" ", "").contains(searchprase)
+                                    || cont.getPhoneNumber().replace(" ", "").contains(newNumber)
+                            ) {
+                                found = true;
+
+
+                                Log.e("Found Contact ", "True");
+                                Log.e("Contact Details", cont.getName() + " " + cont.getPhoneNumber());
+
+                                contact.setName(cont.getName());
+                                contact.setPhoneNumber(cont.getPhoneNumber());
+                                break;
+
+                            }
+                        }
+                    }
+
+
+                    if (found) {
+                        Voice.speak(contactActivity.this, "Calling" + contact.getName() + " Please wait", false);
+
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
+
+                        if (ActivityCompat.checkSelfPermission(contactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            // Request permission to make phone calls
+                            ActivityCompat.requestPermissions(contactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                        } else {
+                            // Permission already granted, make the phone call
+                            startActivity(intent);
+                        }
+                    } else {
+
+
+                        String inputText = newList.get(0);
+
+                        boolean containsStringChars = false;
+
+                        for (int i = 0; i < inputText.length(); i++) {
+                            if (Character.isLetter(inputText.charAt(i))) {
+                                containsStringChars = true;
+                                break;
+                            }
+                        }
+
+                        if (containsStringChars) {
+                            Voice.speak(contactActivity.this, "Name not found or you are trying to call an invalid number, Try again", false);
+                        } else {
+                            Voice.speak(contactActivity.this, "Starting Your call", false);
+
+                            Intent intent = new Intent(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + newList.get(0)));
+
+                            if (ActivityCompat.checkSelfPermission(contactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                // Request permission to make phone calls
+                                ActivityCompat.requestPermissions(contactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                            } else {
+                                // Permission already granted, make the phone call
+                                startActivity(intent);
+                            }
+                        }
+
+
+                    }
 
 
                 }

@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,10 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/blue"
+            android:background="@color/darkblue"
             android:fontFamily="@font/opensbold"
             android:padding="65dp"
-            android:text="@string/search_object"
+            android:text="swipe area"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="30sp" />
 

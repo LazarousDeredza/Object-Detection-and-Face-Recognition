@@ -17,6 +17,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -139,6 +140,7 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
                 startActivity(intent);
             }
         });
+
 
 
     }
@@ -387,14 +389,23 @@ public class dashboardActivity extends AppCompatActivity implements LocationList
         } catch (ActivityNotFoundException y) {
             y.printStackTrace();
             Log.e("Error ", y.getMessage());
-            Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
 
             Voice.speak(dashboardActivity.this, "Your Device is failing to support speech recognition", false);
+
+            String appPackageName = "com.google.android.googlequicksearchbox";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
         } catch (InterruptedException s) {
             s.printStackTrace();
             Log.e("Error ", s.getMessage());
-            Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
-            Voice.speak(dashboardActivity.this, "Your Device is failing to support speech recognition", false);
+            /*Toast.makeText(this, "Your Device is failing to support speech recognition", Toast.LENGTH_SHORT).show();
+            Voice.speak(dashboardActivity.this, "Your Device is failing to support speech recognition", false);*/
         }
     }
 
