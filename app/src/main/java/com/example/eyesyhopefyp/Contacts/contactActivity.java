@@ -409,6 +409,19 @@ public class contactActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                    }else if (containsWords(cmd, new String[]{"clear"}) || containsWords(cmd, new String[]{"clear search"}) ||
+                            containsWords(cmd, new String[]{"clear search results"}) || containsWords(cmd, new String[]{"clear results"})
+                    ) {
+                        textToSpeech.speak("Search cleared", TextToSpeech.QUEUE_ADD, null, null);
+                        try {
+                            Thread.sleep(3000);
+
+                            contactPopulate=db.getAllContacts();
+                            adapter.filterList(contactPopulate);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
@@ -440,6 +453,8 @@ public class contactActivity extends AppCompatActivity {
 
                         newList.add(newvalue.replaceAll("-", ""));
                     }
+
+
                     Log.e("new ressss", newList.toString() + "\nLength : " + newList.size());
 
 
@@ -465,8 +480,9 @@ public class contactActivity extends AppCompatActivity {
 
                         for (Contact cont : contactPopulate) {
 
+                            Log.e("Contact from contacts",cont.getName().replace(" ", ""));
 
-                            if (cont.getName().replace(" ", "").contains(searchprase) ||
+                            if (cont.getName().replace(" ", "").toLowerCase().contains(searchprase.toLowerCase()) ||
                                     cont.getPhoneNumber().replace(" ", "").contains(searchprase)
                                     || cont.getPhoneNumber().replace(" ", "").contains(newNumber)
                             ) {
@@ -619,6 +635,8 @@ public class contactActivity extends AppCompatActivity {
             }
         }
 
+        Voice.speak(contactActivity.this, "Found " +filtered.size() +" results", false);
+        contactPopulate=filtered;
         adapter.filterList(filtered);
 
     }
