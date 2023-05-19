@@ -100,7 +100,8 @@ public class HelpActivity extends AppCompatActivity {
 
         myDbHelper = new MyDbHelper(this);
         users = myDbHelper.getAllUSERS();
-
+        latitude = -20.0866183;
+        longitude = 30.8160517;
 
         Name = users.get(0).getName();
 
