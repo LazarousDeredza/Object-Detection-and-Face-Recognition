@@ -4,7 +4,7 @@
 
 #Why YOLO?
 
-#YOLO (You Only Look Once) is a real-time object detection system that has gained popularity in computer vision applications. The main advantage of YOLO over other object detection systems is its speed. YOLO is able to detect objects in an image in real-time, meaning that it can process frames from a video stream at a rate of several frames per second.
+:YOLO (You Only Look Once) is a real-time object detection system that has gained popularity in computer vision applications. The main advantage of YOLO over other object detection systems is its speed. YOLO is able to detect objects in an image in real-time, meaning that it can process frames from a video stream at a rate of several frames per second.
 
 #Another advantage of YOLO is its accuracy. YOLO is able to detect objects with a high degree of accuracy, even in cases where the objects are partially occluded or have low contrast with the background.
 
