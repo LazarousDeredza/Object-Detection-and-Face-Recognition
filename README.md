@@ -11,3 +11,7 @@
 #YOLO also has a relatively simple architecture compared to other object detection systems, making it easier to implement and train. This simplicity allows YOLO to be used on resource-constrained devices like smartphones and embedded systems.
 
 #Overall, YOLO's combination of speed, accuracy, and simplicity has made it a popular choice for real-time object detection in a variety of applications, including autonomous vehicles, surveillance systems, and robotics.
+
+#For Face Recognition ,OpenCV library was used in conjuction with CNN (Convolutionary Nuerral Networks) 
+
+CNNs are a type of deep learning algorithm that have shown impressive results in face recognition. CNNs can be trained on large datasets of faces to learn features automatically and can achieve high accuracy in face recognition tasks.
