@@ -1,4 +1,4 @@
-# Blind Assistant Application : Eyesy Hope Version 1
+# Blind Assistant Android Application : Eyesy Hope Version 1
 #An android application for blind people which implements object detection and face recognition as core features
 
 ![img.png](img.png).
