@@ -51,7 +51,41 @@
 
 ## Object Detection
 
-![Screenshot_20230521-144450_Blind Assist AI.jpg](Screenshot_20230521-144450_Blind Assist AI.jpg).
+### My bicycle being detected with a 72% degree of accuracy
+![object1.jpg](object1.jpg).
+
+### My dog being detected with a 71% degree of accuracy
+![object2.jpg](object2.jpg).
+
+### Multiple objects , a mouse and a bottle being detected at the same time
+![object3.jpg](object3.jpg).
+
+### My laptop being detected with a 77% degree of accuracy
+![object4.jpg](object4.jpg).
+
+## Face Recognition
+
+### My Friend Farai recognized with a 92% degree of accuracy
+![face1.jpg](face1.jpg).
+
+### My face being recognized with a 74% degree of accuracy , which was very okay for a cloudy day
+![face2.jpg](face2.jpg).
+
+### Trying to recognize a face that has not been trained / entered in the system , a blue bounding box sorrounding your face show that you are not recognized and also an audio output notifying the user that this person is not recognized is played
+![face4.jpg](face4.jpg).
+
+
+
+# How to run the project 
+
+- Install Git: First, make sure you have Git installed on your system. You can download Git from the official Git website (https://git-scm.com). Follow the installation instructions based on your operating system.
+- Clone the repository: Open a terminal or command prompt and navigate to the directory where you want to clone the repository. Then use the following command to clone the repository: Copy git clone <repository_url> Replace repository_url> with the URL of the GitHub repository you want to clone. For example:
+- Open the project in Android Studio: Once the repository is cloned, open Android Studio and select "Open an existing Android Studio project." Navigate to the directory where the repository was cloned and select the project's root folder.
+- Install dependencies: If the project has any external dependencies, you may need to install them. Check the project's documentation or README file for instructions on how to install the required dependencies.
+- Set up device or emulator: Connect a physical Android device to your computer using a USB cable, or start an Android emulator from Android Studio. Make sure the device or emulator is recognized by your system.
+- Build and run the project: In Android Studio, select the target device from the device dropdown menu (next to the green play button). Then click the play button or use the shortcut Shift + F10 to build and run the project on the selected device.
+
+
 
   
 
